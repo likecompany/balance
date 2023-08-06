@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  balance_backend:
+    image: balance_backend:latest
+    build:
+      context: ${PWD}
+      dockerfile: docker/Dockerfile
+    command: /bin/bash -c \
+      "echo '[+] Run backend' && \
+      python main.py"
+    volumes:
+      - ${PWD}/app:/app
+    env_file:
+      - ${PWD}/.env
+    depends_on:
+      balance_database:
+        condition: service_healthy
+    ports:
+      - ${PORT}:${PORT}
+    restart: unless-stopped

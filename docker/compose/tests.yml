@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  balance_tests:
+    image: balance_tests:latest
+    build:
+      context: ${PWD}
+      dockerfile: docker/Dockerfile
+    command: /bin/bash -c \
+      "echo '[+] Run tests' && \
+      python -m pytest --capture=sys --cov=app --cov-report html tests"
+    volumes:
+      - ${PWD}/:/app
+    env_file:
+      - ${PWD}/.env
+    environment:
+      DATABASE_HOSTNAME: balance_tests_database
+    depends_on:
+      balance_tests_database:
+        condition: service_healthy
