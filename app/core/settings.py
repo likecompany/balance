@@ -75,3 +75,10 @@ class InterfaceSettings(BaseSettings):
 
 
 interface_settings = InterfaceSettings()
+
+
+class AccessSettings(BaseSettings):
+    ALLOW_IPS: str
+
+
+access_settings = AccessSettings()
