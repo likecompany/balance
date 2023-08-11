@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Tuple, cast
+from typing import cast
 
 import stringcase
-from sqlalchemy import types
-from sqlalchemy.orm import DeclarativeBase, declared_attr, registry
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
+
+from .types import BigInt
 
 
 class ORMModel(DeclarativeBase):
-    if TYPE_CHECKING:
-        __table_args__: Tuple[Any, ...]
-
-    registry = registry(
-        type_annotation_map={
-            int: types.BIGINT(),
-        }
-    )
+    id: Mapped[BigInt] = mapped_column(unique=True, primary_key=True)
 
     @declared_attr  # type: ignore
     def __tablename__(cls) -> str:  # noqa
