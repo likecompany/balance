@@ -1,5 +1,7 @@
 FROM python:latest
 
+ENV PATH="${PATH}:/root/.poetry/bin"
+
 WORKDIR /app
 
 ADD . /app
