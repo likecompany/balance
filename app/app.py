@@ -4,6 +4,7 @@ from dataclasses import fields
 from typing import Any, Dict
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from starlette import status
 from starlette_admin.contrib.sqla import Admin as SQLAlchemyAdmin
 from starlette_admin.contrib.sqla import ModelView as SQLAlchemyModelView
@@ -32,6 +33,22 @@ def create_application() -> FastAPI:
         docs_url=server_settings.DOCS_URL,
         redoc_url=server_settings.REDOC_URL,
         openapi_url=server_settings.OPENAPI_URL,
+        exception_handlers={
+            status.HTTP_404_NOT_FOUND: lambda request, exception: JSONResponse(
+                content={
+                    "ok": False,
+                    "result": "NOT_FOUND",
+                },
+                status_code=status.HTTP_404_NOT_FOUND,
+            ),
+            status.HTTP_405_METHOD_NOT_ALLOWED: lambda request, exception: JSONResponse(
+                content={
+                    "ok": False,
+                    "result": "METHOD_NOT_ALLOWED",
+                },
+                status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+            ),
+        },
     )
     application.include_router(api_router, prefix="/balance", tags=["balance"])
 
