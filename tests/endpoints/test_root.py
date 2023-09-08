@@ -7,7 +7,7 @@ from tests.endpoints import Route
 
 
 class TestRootRoute(Route[bool]):
-    __url__ = "/"
+    __url__ = "/balance"
     __method__ = "POST"
     __response__ = bool
 
