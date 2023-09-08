@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional, Tuple
 from corecrud import Returning, Values, Where
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
-from fastapi.param_functions import Depends
+from fastapi.param_functions import Body, Depends
 from likeinterface.exceptions import LikeAPIError
 from likeinterface.methods import (
     GetAuthorizationInformationMethod,
@@ -19,30 +19,15 @@ from core.depends import DatabaseSession, allow_known_ips
 from core.interfaces import interfaces
 from logger import logger
 from orm import BalanceModel
-from schema import ApplicationResponse, ApplicationSchema
-
-
-class Balance(ApplicationSchema):
-    id: int
-    balance: int
-    user: User
-
-
-class GetBalance(ApplicationSchema):
-    user_id: Optional[int] = None
-    access_token: Optional[str] = None
-
-
-class SetNewBalance(ApplicationSchema):
-    balance: int
-    user_id: int
-
+from requests import GetBalanceRequest, SetNewBalanceRequest
+from responses import BalanceResponse
+from schema import ApplicationResponse
 
 router = APIRouter()
 
 
 async def get_balance_core(
-    request: GetBalance,
+    request: GetBalanceRequest,
     session: DatabaseSession,
 ) -> Tuple[BalanceModel, User]:
     if request.access_token:
@@ -93,13 +78,19 @@ async def get_balance_core(
 
 @router.post(
     path=".getBalance",
-    response_model=ApplicationResponse[Balance],
+    response_model=ApplicationResponse[BalanceResponse],
     status_code=status.HTTP_200_OK,
 )
 async def get_balance(
-    request: GetBalance,
     session: DatabaseSession,
+    request: Optional[GetBalanceRequest] = Body(None),
 ) -> Dict[str, Any]:
+    if not request:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="BAD_REQUEST",
+        )
+
     balance, user = await get_balance_core(request=request, session=session)
 
     return {
@@ -113,7 +104,7 @@ async def get_balance(
 
 
 async def set_new_balance_core(
-    request: SetNewBalance, session: DatabaseSession
+    request: SetNewBalanceRequest, session: DatabaseSession
 ) -> Tuple[BalanceModel, User]:
     if not await crud.balances.select.one(
         Where(BalanceModel.user_id == request.user_id),
@@ -145,12 +136,12 @@ async def set_new_balance_core(
 @router.post(
     path=".setNewBalance",
     dependencies=[Depends(allow_known_ips)],
-    response_model=ApplicationResponse[Balance],
+    response_model=ApplicationResponse[BalanceResponse],
     status_code=status.HTTP_200_OK,
 )
 async def set_new_balance(
-    request: SetNewBalance,
     session: DatabaseSession,
+    request: SetNewBalanceRequest = Body(...),
 ) -> Dict[str, Any]:
     balance, user = await set_new_balance_core(request=request, session=session)
 
