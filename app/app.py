@@ -4,6 +4,7 @@ from dataclasses import fields
 from typing import Any, Dict
 
 from fastapi import FastAPI
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from starlette import status
 from starlette_admin.contrib.sqla import Admin as SQLAlchemyAdmin
@@ -37,7 +38,9 @@ def create_application() -> FastAPI:
             status.HTTP_404_NOT_FOUND: lambda request, exception: JSONResponse(
                 content={
                     "ok": False,
-                    "result": "NOT_FOUND",
+                    "result": "NOT_FOUND"
+                    if not isinstance(exception, HTTPException) and exception.detail
+                    else exception.detail,
                 },
                 status_code=status.HTTP_404_NOT_FOUND,
             ),
