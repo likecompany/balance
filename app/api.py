@@ -103,7 +103,7 @@ async def get_balance(
     }
 
 
-async def set_new_balance_core(
+async def set_balance_core(
     request: SetNewBalanceRequest, session: DatabaseSession
 ) -> Tuple[BalanceModel, User]:
     if not await crud.balances.select.one(
@@ -134,16 +134,16 @@ async def set_new_balance_core(
 
 
 @router.post(
-    path=".setNewBalance",
+    path=".setBalance",
     dependencies=[Depends(allow_known_ips)],
     response_model=ApplicationResponse[BalanceResponse],
     status_code=status.HTTP_200_OK,
 )
-async def set_new_balance(
+async def set_balance(
     session: DatabaseSession,
     request: SetNewBalanceRequest = Body(...),
 ) -> Dict[str, Any]:
-    balance, user = await set_new_balance_core(request=request, session=session)
+    balance, user = await set_balance_core(request=request, session=session)
 
     return {
         "ok": True,
