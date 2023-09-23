@@ -53,7 +53,7 @@ def create_application() -> FastAPI:
             ),
         },
     )
-    application.include_router(api_router, prefix="/balance", tags=["balance"])
+    application.include_router(api_router, tags=["balance"])
 
     def create_on_event() -> None:
         @application.on_event("startup")
@@ -71,7 +71,7 @@ def create_application() -> FastAPI:
 
     def create_routes() -> None:
         @application.post(
-            path="/balance",
+            path="/",
             response_model=ApplicationResponse[bool],
             status_code=status.HTTP_200_OK,
         )
@@ -85,7 +85,7 @@ def create_application() -> FastAPI:
         logger.info("Creating an admin panel is only available in debug mode, status: ...")
         if server_settings.DEBUG:
             admin = SQLAlchemyAdmin(
-                base_url="/auth",
+                base_url="/",
                 engine=engine,
                 debug=False,
             )

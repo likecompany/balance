@@ -77,7 +77,7 @@ async def get_balance_core(
 
 
 @router.post(
-    path=".getBalance",
+    path="/getBalance",
     response_model=ApplicationResponse[BalanceResponse],
     status_code=status.HTTP_200_OK,
 )
@@ -134,7 +134,7 @@ async def set_balance_core(
 
 
 @router.post(
-    path=".setBalance",
+    path="/setBalance",
     dependencies=[Depends(allow_known_ips)],
     response_model=ApplicationResponse[BalanceResponse],
     status_code=status.HTTP_200_OK,
