@@ -12,7 +12,7 @@ services:
     volumes:
       - ${PWD}/balance/app:/app
     env_file:
-      - ${PWD}/balance/.env
+      - ${PWD}/.env
     depends_on:
       balance_database:
         condition: service_healthy

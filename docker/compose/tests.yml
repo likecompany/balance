@@ -12,7 +12,7 @@ services:
     volumes:
       - ${PWD}/balance/:/app
     env_file:
-      - ${PWD}/balance/.env
+      - ${PWD}/.env
     environment:
       DATABASE_HOSTNAME: balance_tests_database
     depends_on:
