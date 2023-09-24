@@ -7,10 +7,7 @@ from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from fastapi.param_functions import Body, Depends
 from likeinterface.exceptions import LikeAPIError
-from likeinterface.methods import (
-    GetAuthorizationInformationMethod,
-    GetUserInformationMethod,
-)
+from likeinterface.methods import GetMe, GetUser
 from likeinterface.types import User
 from starlette import status
 
@@ -33,7 +30,7 @@ async def get_balance_core(
     if request.access_token:
         try:
             user = await interface.request(
-                method=GetAuthorizationInformationMethod(access_token=request.access_token)
+                method=GetMe(access_token=request.access_token)
             )
         except LikeAPIError as e:
             logger.exception(e)
@@ -54,7 +51,7 @@ async def get_balance_core(
     else:
         try:
             user = await interface.request(
-                method=GetUserInformationMethod(user_id=request.user_id)
+                method=GetUser(user_id=request.user_id)
             )
         except LikeAPIError:
             raise HTTPException(
@@ -116,7 +113,7 @@ async def set_balance_core(
         )
 
     try:
-        user = await interface.request(method=GetUserInformationMethod(user_id=request.user_id))
+        user = await interface.request(method=GetUser(user_id=request.user_id))
     except LikeAPIError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

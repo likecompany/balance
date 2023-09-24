@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-likeinterface = "^1.1.0.1a"
+likeinterface = "^2.0a"
 corecrud = "^0.1.4.1"
 python-dotenv = "^1.0.0"
 python-multipart = "^0.0.6"
