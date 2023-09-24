@@ -1,5 +1,0 @@
-version: "3.9"
-
-networks:
-  like_network:
-    name: "like_network"

@@ -4,18 +4,18 @@ services:
   balance_backend:
     image: balance_backend:latest
     build:
-      context: ${PWD}
+      context: ${PWD}/balance
       dockerfile: docker/Dockerfile
     command: /bin/bash -c \
-      "echo '[+] Run backend' && \
+      "echo '[+] Running Balance Backend' && \
       python main.py"
     volumes:
-      - ${PWD}/app:/app
+      - ${PWD}/balance/app:/app
     env_file:
-      - ${PWD}/.env
+      - ${PWD}/balance/.env
     depends_on:
       balance_database:
         condition: service_healthy
-    ports:
-      - ${PORT}:${PORT}
+    expose:
+      - ${BALANCE_PORT}
     restart: unless-stopped

@@ -4,7 +4,7 @@ services:
   balance_alembic:
     image: balance_alembic:latest
     build:
-      context: ${PWD}
+      context: ${PWD}/balance
       dockerfile: docker/Dockerfile
     command: /bin/bash -c \
       "echo '[+] Run migrations' && \
@@ -12,9 +12,9 @@ services:
       alembic revision --autogenerate -m "Migrations" && \
       alembic upgrade head"
     volumes:
-      - ${PWD}/:/app
+      - ${PWD}/balance/:/app
     env_file:
-      - ${PWD}/.env
+      - ${PWD}/balance/.env
     depends_on:
       balance_database:
         condition: service_healthy

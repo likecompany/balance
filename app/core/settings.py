@@ -18,7 +18,7 @@ class ServerSettings(BaseSettings):
     DEBUG: bool
     RELOAD: bool
     HOSTNAME: str
-    PORT: int
+    BALANCE_PORT: int
     DOCS_URL: Optional[str] = None
     REDOC_URL: Optional[str] = None
     OPENAPI_URL: Optional[str] = None
