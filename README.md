@@ -27,8 +27,8 @@ Also needed:
 **Step 1**: Clone the backend project repository. Notice that we are currently developing at dev branch.
 
 ```bash
-git clone git@github.com:likecompany/auth.git
-cd abra_back
+git clone git@github.com:likecompany/balance.git
+cd balance
 mv .env_dist .env
 ```
 
@@ -49,23 +49,6 @@ sh scripts/mypy.sh
 **Step 2:** Build and Run the Docker Container
 
 2.1. Create `.env` file to the root of the project folder.
-
-2.2. To start the project in Docker run:
-
-```shell
-make build
-make migrations
-make application
-make application-logs
-```
-
-To run the project locally:
-
-```shell
-python3 app/main.py
-```
-
-2.3 You can find OpenAPI schema at http://localhost/docs
 
 **Step 3:** Understand the architecture
 
