@@ -16,7 +16,7 @@ from starlette import status
 
 from core.crud import crud
 from core.depends import DatabaseSession, allow_known_ips
-from core.interfaces import interfaces
+from core.interface import interface
 from logger import logger
 from orm import BalanceModel
 from requests import GetBalanceRequest, SetNewBalanceRequest
@@ -32,7 +32,7 @@ async def get_balance_core(
 ) -> Tuple[BalanceModel, User]:
     if request.access_token:
         try:
-            user = await interfaces.auth_interface.request(
+            user = await interface.request(
                 method=GetAuthorizationInformationMethod(access_token=request.access_token)
             )
         except LikeAPIError as e:
@@ -53,7 +53,7 @@ async def get_balance_core(
             )
     else:
         try:
-            user = await interfaces.auth_interface.request(
+            user = await interface.request(
                 method=GetUserInformationMethod(user_id=request.user_id)
             )
         except LikeAPIError:
@@ -116,9 +116,7 @@ async def set_balance_core(
         )
 
     try:
-        user = await interfaces.auth_interface.request(
-            method=GetUserInformationMethod(user_id=request.user_id)
-        )
+        user = await interface.request(method=GetUserInformationMethod(user_id=request.user_id))
     except LikeAPIError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
