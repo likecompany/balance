@@ -32,7 +32,7 @@ def create_application() -> FastAPI:
         description="API for User Balances.",
         version="1.0a",
         debug=server_settings.DEBUG,
-        root_path="/balances",
+        root_path="/balance",
         docs_url=docs_url,
         redoc_url=redoc_url,
         openapi_url=openapi_url,
