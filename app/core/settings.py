@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 from pydantic_settings import BaseSettings as PydanticBaseSettings
 from pydantic_settings import SettingsConfigDict
 
@@ -19,9 +17,6 @@ class ServerSettings(BaseSettings):
     RELOAD: bool
     HOSTNAME: str
     BALANCE_PORT: int
-    DOCS_URL: Optional[str] = None
-    REDOC_URL: Optional[str] = None
-    OPENAPI_URL: Optional[str] = None
 
 
 server_settings = ServerSettings()

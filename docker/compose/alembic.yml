@@ -18,3 +18,5 @@ services:
     depends_on:
       balance_database:
         condition: service_healthy
+    networks:
+      - like_network

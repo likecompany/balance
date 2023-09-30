@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-  balance_backend:
-    image: balance_backend:latest
+  balance:
+    image: balance:latest
     build:
       context: ${PWD}/balance
       dockerfile: docker/Dockerfile
@@ -18,4 +18,6 @@ services:
         condition: service_healthy
     expose:
       - ${BALANCE_PORT}
+    networks:
+      - like_network
     restart: unless-stopped

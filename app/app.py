@@ -3,8 +3,6 @@ from __future__ import annotations
 from typing import Any, Dict
 
 from fastapi import FastAPI
-from fastapi.exceptions import HTTPException
-from fastapi.responses import JSONResponse
 from starlette import status
 from starlette_admin.contrib.sqla import Admin as SQLAlchemyAdmin
 from starlette_admin.contrib.sqla import ModelView as SQLAlchemyModelView
@@ -25,32 +23,19 @@ def create_application() -> FastAPI:
     Setup FastAPI application: middleware, exception handlers, jwt, logger.
     """
 
+    docs_url, redoc_url, openapi_url = "/docs", "/redoc", "/openapi.json"
+    if not server_settings.DEBUG:
+        docs_url, redoc_url, openapi_url = None, None, None
+
     application = FastAPI(
         title="like.company.balance",
         description="API for User Balances.",
         version="1.0a",
         debug=server_settings.DEBUG,
-        docs_url=server_settings.DOCS_URL,
-        redoc_url=server_settings.REDOC_URL,
-        openapi_url=server_settings.OPENAPI_URL,
-        exception_handlers={
-            status.HTTP_404_NOT_FOUND: lambda request, exception: JSONResponse(
-                content={
-                    "ok": False,
-                    "result": "NOT_FOUND"
-                    if not isinstance(exception, HTTPException) and exception.detail
-                    else exception.detail,
-                },
-                status_code=status.HTTP_404_NOT_FOUND,
-            ),
-            status.HTTP_405_METHOD_NOT_ALLOWED: lambda request, exception: JSONResponse(
-                content={
-                    "ok": False,
-                    "result": "METHOD_NOT_ALLOWED",
-                },
-                status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-            ),
-        },
+        root_path="/balances",
+        docs_url=docs_url,
+        redoc_url=redoc_url,
+        openapi_url=openapi_url,
     )
     application.include_router(api_router, tags=["balance"])
 
@@ -83,7 +68,7 @@ def create_application() -> FastAPI:
         logger.info("Creating an admin panel is only available in debug mode, status: ...")
         if server_settings.DEBUG:
             admin = SQLAlchemyAdmin(
-                base_url="/",
+                base_url="/admin",
                 engine=engine,
                 debug=False,
             )
