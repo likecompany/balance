@@ -3,6 +3,7 @@ name = "balance"
 version = "1.0a"
 description = "API for User Balances."
 authors = ["likecompany"]
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
