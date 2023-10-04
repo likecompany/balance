@@ -9,10 +9,11 @@ from fastapi.param_functions import Body, Depends
 from likeinterface.exceptions import LikeAPIError
 from likeinterface.methods import GetMe, GetUser
 from likeinterface.types import User
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from core.crud import crud
-from core.depends import DatabaseSession, allow_known_ips
+from core.depends import allow_known_ips, get_session
 from core.interface import interface
 from logger import logger
 from orm import BalanceModel
@@ -25,13 +26,11 @@ router = APIRouter()
 
 async def get_balance_core(
     request: GetBalanceRequest,
-    session: DatabaseSession,
+    session: AsyncSession,
 ) -> Tuple[BalanceModel, User]:
     if request.access_token:
         try:
-            user = await interface.request(
-                method=GetMe(access_token=request.access_token)
-            )
+            user = await interface.request(method=GetMe(access_token=request.access_token))
         except LikeAPIError as e:
             logger.exception(e)
 
@@ -50,9 +49,7 @@ async def get_balance_core(
             )
     else:
         try:
-            user = await interface.request(
-                method=GetUser(user_id=request.user_id)
-            )
+            user = await interface.request(method=GetUser(user_id=request.user_id))
         except LikeAPIError:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -79,7 +76,7 @@ async def get_balance_core(
     status_code=status.HTTP_200_OK,
 )
 async def get_balance(
-    session: DatabaseSession,
+    session: AsyncSession = Depends(get_session),
     request: Optional[GetBalanceRequest] = Body(None),
 ) -> Dict[str, Any]:
     if not request:
@@ -101,7 +98,7 @@ async def get_balance(
 
 
 async def set_balance_core(
-    request: SetNewBalanceRequest, session: DatabaseSession
+    request: SetNewBalanceRequest, session: AsyncSession
 ) -> Tuple[BalanceModel, User]:
     if not await crud.balances.select.one(
         Where(BalanceModel.user_id == request.user_id),
@@ -135,7 +132,7 @@ async def set_balance_core(
     status_code=status.HTTP_200_OK,
 )
 async def set_balance(
-    session: DatabaseSession,
+    session: AsyncSession = Depends(get_session),
     request: SetNewBalanceRequest = Body(...),
 ) -> Dict[str, Any]:
     balance, user = await set_balance_core(request=request, session=session)
