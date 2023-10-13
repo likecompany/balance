@@ -9,7 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 corecrud = "^0.1.4.1"
-likeinterface = "^2.1.4"
+likeinterface = "^2.2"
 python-dotenv = "^1.0.0"
 python-multipart = "^0.0.6"
 colorlog = "^6.7.0"
