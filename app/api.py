@@ -106,7 +106,7 @@ async def set_balance_core(
     ):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="USER_NOT_EXISTS",
+            detail="BALANCE_NOT_EXISTS",
         )
 
     try:
@@ -118,7 +118,9 @@ async def set_balance_core(
         )
 
     balance = await crud.balances.update.one(
+        Where(BalanceModel.user_id == user.id),
         Values({BalanceModel.balance: request.balance}),
+        Returning(BalanceModel),
         session=session,
     )
 

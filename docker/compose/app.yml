@@ -20,4 +20,4 @@ services:
       - ${BALANCE_PORT}
     networks:
       - like_network
-    restart: unless-stopped
+    restart: always

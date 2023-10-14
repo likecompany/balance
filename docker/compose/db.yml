@@ -3,6 +3,7 @@ version: "3.9"
 services:
   balance_database:
     image: postgres:latest
+    restart: always
     volumes:
       - postgres_balance_data_database:/var/lib/postgresql/data/
     env_file:
